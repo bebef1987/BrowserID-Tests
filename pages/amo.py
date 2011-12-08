@@ -21,7 +21,6 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s): Bebe <florin.strugariu@softvision.ro>
-#                 Zac Campbell
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,28 +36,41 @@
 #
 # ***** END LICENSE BLOCK *****
 
-import pytest
-from unittestzero import Assert
-from pages.amo import Home
+from selenium.webdriver.common.by import By
 
-nondestructive = pytest.mark.nondestructive
-destructive = pytest.mark.destructive
+from browser_id import BrowserID
+from pages.page import Page
 
 
-class TestAMO:
+class Home(Page):
 
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
+    _page_title = "Add-ons for Firefox"
 
-        home_page = Home(mozwebqa)
-        home_page.login()
-        Assert.true(home_page.is_the_current_page)
-        Assert.true(home_page.is_user_logged_in)
+    _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account a.user")
+    _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
+    _login_locator = (By.CSS_SELECTOR, "#aux-nav .browserid-login")
 
-        home_page.click_logout()
-        Assert.false(home_page.is_user_logged_in)
+    def __init__(self, testsetup, open_url=True):
+        ''' Creates a new instance of the class and gets the page ready for testing '''
+        Page.__init__(self, testsetup)
+        if open_url:
+            self.selenium.get(self.base_url)
+
+    def login(self, user="default"):
+        browser_id = self.click_login()
+        browser_id.login(user)
+        browser_id.sign_in()
+
+    def click_login(self):
+        self.selenium.find_element(*self._login_locator).click()
+        return BrowserID(self.testsetup)
+
+    def click_logout(self):
+        self.selenium.find_element(*self._logout_locator).click()
+
+    @property
+    def is_user_logged_in(self):
+        try:
+            return self.is_element_visible(*self._account_controller_locator)
+        except:
+            return False
