@@ -54,7 +54,7 @@ class Home(Page):
         ''' Creates a new instance of the class and gets the page ready for testing '''
         Page.__init__(self, testsetup)
         if open_url:
-            self.selenium.get(self.base_url)
+            self.selenium.get("https://addons-dev.allizom.org/")
 
     def login(self, user="default"):
         browser_id = self.click_login()
