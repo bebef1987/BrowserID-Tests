@@ -36,30 +36,17 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
-from pages.base import Base
+from base import Base
+
+class Home(Base):
+
+    _page_title = "BrowserID: A Better Way to Sign In"
 
 
-class SignIn(Base):
 
-    _page_title = "BrowserID: Sign In"
-
-    _email_locator = (By.ID, 'email')
-    _password_locator = (By.ID, 'password')
-
-    _sign_in_locator = (By.CSS_SELECTOR, '.submit.cf > button')
-
-    def login(self, credentials, use_return=True):
-
-        email = self.selenium.find_element(*self._email_locator)
-        email.send_keys(credentials['email'])
-
-        password = self.selenium.find_element(*self._password_locator)
-        password.send_keys(credentials['password'])
-
-        if  use_return:
-            password.send_keys(Keys.RETURN)
-        else:
-            self.selenium.find_element(*self._sign_in_locator).click()
+    def __init__(self, testsetup, open_url=True):
+        ''' Creates a new instance of the class and gets the page ready for testing '''
+        Base.__init__(self, testsetup)
+        if open_url:
+            self.selenium.get("https://www.diresworb.org/")

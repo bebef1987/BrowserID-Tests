@@ -39,7 +39,7 @@
 
 import pytest
 from unittestzero import Assert
-from pages.amo import Home
+from pages.amo.amo import Home
 
 nondestructive = pytest.mark.nondestructive
 destructive = pytest.mark.destructive

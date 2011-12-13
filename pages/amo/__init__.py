@@ -35,18 +35,3 @@
 # the terms of any one of the MPL, the GPL or the LGPL.
 #
 # ***** END LICENSE BLOCK *****
-
-
-from pages.base import Base
-
-class Home(Base):
-
-    _page_title = "BrowserID: A Better Way to Sign In"
-
-
-
-    def __init__(self, testsetup, open_url=True):
-        ''' Creates a new instance of the class and gets the page ready for testing '''
-        Base.__init__(self, testsetup)
-        if open_url:
-            self.selenium.get("https://www.diresworb.org/")
