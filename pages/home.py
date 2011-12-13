@@ -21,7 +21,6 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s): Bebe <florin.strugariu@softvision.ro>
-#                 Zac Campbell
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,44 +36,17 @@
 #
 # ***** END LICENSE BLOCK *****
 
-import pytest
-from unittestzero import Assert
-from pages.home import Home
 
-nondestructive = pytest.mark.nondestructive
-destructive = pytest.mark.destructive
+from pages.base import Base
+
+class Home(Base):
+
+    _page_title = "BrowserID: A Better Way to Sign In"
 
 
-class TestDiresworb:
 
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id_and_sign_in_button(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
-
-        home_page = Home(mozwebqa)
-        home_page.login(user="default", use_return=False)
-
-        Assert.true(home_page.header.is_sign_out_visible)
-
-        home_page.header.click_sign_out()
-        Assert.false(home_page.header.is_sign_out_visible)
-
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id_and_return(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
-
-        home_page = Home(mozwebqa)
-        home_page.login(user="default", use_return=True)
-
-        Assert.true(home_page.header.is_sign_out_visible)
-
-        home_page.header.click_sign_out()
-        Assert.false(home_page.header.is_sign_out_visible)
+    def __init__(self, testsetup, open_url=True):
+        ''' Creates a new instance of the class and gets the page ready for testing '''
+        Base.__init__(self, testsetup)
+        if open_url:
+            self.selenium.get("https://www.diresworb.org/")

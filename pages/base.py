@@ -21,7 +21,6 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s): Bebe <florin.strugariu@softvision.ro>
-#                 Zac Campbell
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,44 +36,47 @@
 #
 # ***** END LICENSE BLOCK *****
 
-import pytest
-from unittestzero import Assert
-from pages.home import Home
-
-nondestructive = pytest.mark.nondestructive
-destructive = pytest.mark.destructive
+from selenium.webdriver.common.by import By
 
 
-class TestDiresworb:
 
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id_and_sign_in_button(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
+from pages.page import Page
 
-        home_page = Home(mozwebqa)
-        home_page.login(user="default", use_return=False)
 
-        Assert.true(home_page.header.is_sign_out_visible)
+class Base(Page):
 
-        home_page.header.click_sign_out()
-        Assert.false(home_page.header.is_sign_out_visible)
+    _auth_locator = (By.CSS_SELECTOR, 'div.display_auth')
+    _nonauth_locator = (By.CSS_SELECTOR, 'div.display_nonauth')
 
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id_and_return(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
+    @property
+    def header(self):
+        return Header(self.testsetup)
 
-        home_page = Home(mozwebqa)
-        home_page.login(user="default", use_return=True)
+    def login(self, user='default', use_return=True):
+        sign_in = self.header.click_sign_in()
+        credentials = self.testsetup.credentials[user]
+        sign_in.login(credentials, use_return)
 
-        Assert.true(home_page.header.is_sign_out_visible)
+        self.wait_for_element_visible(*self._auth_locator)
+        from pages.home import Home
+        return Home(self.testsetup , open_url=False)
 
-        home_page.header.click_sign_out()
-        Assert.false(home_page.header.is_sign_out_visible)
+class Header(Base):
+
+    _sign_in_locator = (By.CSS_SELECTOR, '#header > ul.nav.cf > li.signIn > a')
+    _sign_out_locator = (By.CSS_SELECTOR, '#header > ul.nav.cf > li.signOut > a')
+
+    def click_sign_in(self):
+        self.selenium.find_element(*self._sign_in_locator).click()
+        from pages.sign_in import SignIn
+        return SignIn(self.testsetup)
+
+    def click_sign_out(self):
+        self.selenium.find_element(*self._sign_out_locator).click()
+        self.wait_for_element_visible(*self._nonauth_locator)
+        from pages.home import Home
+        return Home(self.testsetup, open_url=False)
+
+    @property
+    def is_sign_out_visible(self):
+        return self.is_element_visible(*self._sign_out_locator)

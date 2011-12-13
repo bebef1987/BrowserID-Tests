@@ -21,7 +21,6 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s): Bebe <florin.strugariu@softvision.ro>
-#                 Zac Campbell
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,44 +36,30 @@
 #
 # ***** END LICENSE BLOCK *****
 
-import pytest
-from unittestzero import Assert
-from pages.home import Home
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
-nondestructive = pytest.mark.nondestructive
-destructive = pytest.mark.destructive
+from pages.base import Base
 
 
-class TestDiresworb:
+class SignIn(Base):
 
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id_and_sign_in_button(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
+    _page_title = "BrowserID: Sign In"
 
-        home_page = Home(mozwebqa)
-        home_page.login(user="default", use_return=False)
+    _email_locator = (By.ID, 'email')
+    _password_locator = (By.ID, 'password')
 
-        Assert.true(home_page.header.is_sign_out_visible)
+    _sign_in_locator = (By.CSS_SELECTOR, '.submit.cf > button')
 
-        home_page.header.click_sign_out()
-        Assert.false(home_page.header.is_sign_out_visible)
+    def login(self, credentials, use_return=True):
 
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id_and_return(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
+        email = self.selenium.find_element(*self._email_locator)
+        email.send_keys(credentials['email'])
 
-        home_page = Home(mozwebqa)
-        home_page.login(user="default", use_return=True)
+        password = self.selenium.find_element(*self._password_locator)
+        password.send_keys(credentials['password'])
 
-        Assert.true(home_page.header.is_sign_out_visible)
-
-        home_page.header.click_sign_out()
-        Assert.false(home_page.header.is_sign_out_visible)
+        if  use_return:
+            password.send_keys(Keys.RETURN)
+        else:
+            self.selenium.find_element(*self._sign_in_locator).click()
