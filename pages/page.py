@@ -87,6 +87,3 @@ class Page(object):
             return self.selenium.find_element(*locator).is_displayed()
         except NoSuchElementException, ElementNotVisibleException:
             return False
-
-    def wait_for_element_visible(self, *element):
-        WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_visible(*element))

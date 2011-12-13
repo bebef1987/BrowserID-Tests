@@ -37,7 +37,7 @@
 # ***** END LICENSE BLOCK *****
 
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 from pages.page import Page
@@ -57,7 +57,7 @@ class Base(Page):
         credentials = self.testsetup.credentials[user]
         sign_in.login(credentials, use_return)
 
-        self.wait_for_element_visible(*self._auth_locator)
+        WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_visible(*self._auth_locator))
         from pages.home import Home
         return Home(self.testsetup , open_url=False)
 
@@ -73,7 +73,7 @@ class Header(Base):
 
     def click_sign_out(self):
         self.selenium.find_element(*self._sign_out_locator).click()
-        self.wait_for_element_visible(*self._nonauth_locator)
+        WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_visible(*self._nonauth_locator))
         from pages.home import Home
         return Home(self.testsetup, open_url=False)
 
