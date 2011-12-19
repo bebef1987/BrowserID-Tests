@@ -38,7 +38,7 @@
 
 from selenium.webdriver.common.by import By
 
-from browser_id import BrowserID
+from pages.browser_id import BrowserID
 from pages.page import Page
 
 
