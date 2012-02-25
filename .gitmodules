@@ -1,0 +1,3 @@
+[submodule "browserid"]
+        path = myfavoritebeer/browserid
+        url = git://github.com/davehunt/bidpom.git
