@@ -12,13 +12,17 @@ from page import Page
 
 class HomePage(Page):
 
-    _page_title = 'My Favorite Beer, a BrowserID example'
+    _page_title = '123done - your tasks, simplified'
 
-    _sign_in_locator = (By.CSS_SELECTOR, '#loginInfo .login')
-    _logout_locator = (By.ID, 'logout')
+    _sign_in_locator = (By.CSS_SELECTOR, '#loggedout > button')
+    _logout_locator = (By.CSS_SELECTOR, '#loggedin > a')
+    _loading_spinner_locator = (By.CSS_SELECTOR, "li.loading img")
 
     def go_to_home_page(self):
         self.selenium.get(self.base_url + '/')
+        WebDriverWait(self.selenium, self.timeout).until(
+            lambda s: self.is_element_visible(*self._sign_in_locator),
+            "Sign-in button did not appear before timeout")
         self.is_the_current_page
 
     def sign_in(self, user='default'):
@@ -27,11 +31,17 @@ class HomePage(Page):
         from browserid import BrowserID
         browserid = BrowserID(self.selenium, self.timeout)
         browserid.sign_in(credentials['email'], credentials['password'])
+        WebDriverWait(self.selenium, self.timeout).until(
+            lambda s: self.is_element_visible(*self._logout_locator)
+            and not self.is_element_visible(*self._loading_spinner_locator),
+            "User could not login before the timeout")
 
     def logout(self):
         self.click_logout()
         WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: not self.is_element_present(*self._logout_locator))
+            lambda s: not self.is_element_visible(*self._logout_locator)
+            and not self.is_element_visible(*self._loading_spinner_locator),
+            "Logout button did not disappear before the timeout")
 
     def click_sign_in(self):
         self.selenium.find_element(*self._sign_in_locator).click()
