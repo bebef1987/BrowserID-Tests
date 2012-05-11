@@ -1,4 +1,4 @@
-[submodule "browserid"]
+[submodule "myfavoritebeer/browserid"]
         path = myfavoritebeer/browserid
         url = git://github.com/davehunt/bidpom.git
 [submodule "123done/browserid"]
