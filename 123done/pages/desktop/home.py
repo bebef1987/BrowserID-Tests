@@ -41,7 +41,7 @@ class HomePage(Page):
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: not self.is_element_visible(*self._logout_locator)
             and not self.is_element_visible(*self._loading_spinner_locator),
-            "Logout button did not disappear before the timeout"))
+            "Logout button did not disappear before the timeout")
 
     def click_sign_in(self):
         self.selenium.find_element(*self._sign_in_locator).click()
