@@ -5,7 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-class MockApplication(dict):
+class MockUser(dict):
 
     def __init__(self, **kwargs):
         # set your default values
