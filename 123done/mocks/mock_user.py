@@ -10,11 +10,10 @@ class MockApplication(dict):
     def __init__(self, **kwargs):
         # set your default values
         import time
-        import os
 
         current_time = str(time.time()).split('.')[0]
-        self['name'] = '123donetest_%s@restmail.net' % current_time
-        self['password'] = 'password12345'
+        self['email'] = '123donetest_%s@restmail.net' % current_time
+        self['password'] = 'Password12345'
 
         # update with any keyword arguments passed
         self.update(**kwargs)
