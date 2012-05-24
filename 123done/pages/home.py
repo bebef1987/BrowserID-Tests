@@ -61,4 +61,4 @@ class HomePage(Page):
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: self.is_element_visible(*self._logout_locator)
             and not self.is_element_visible(*self._loading_spinner_locator),
-            "User could not login before the timeout")
+            "User could not log in before the timeout")

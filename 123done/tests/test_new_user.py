@@ -25,11 +25,11 @@ class TestNewAccount:
         bid_login = home_pg.click_sign_in()
         bid_login.sign_in_new_user(user['email'])
 
-        #Open restmail inbox, find the email
+        # Open restmail inbox, find the email
         inbox = RestmailInbox(user['email'])
         email = inbox.find_by_sender('BrowserID@browserid.org')
 
-        # Load the browser id link from the email in the browser
+        # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.bid_link)
 
         browserid.verify_email_address(user['password'])
