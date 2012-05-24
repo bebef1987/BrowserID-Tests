@@ -6,18 +6,32 @@
 
 import requests
 import json
+from time import sleep
 
 class RestmailInbox(object):
     
     restmail_mail_server = "https://restmail.net/mail/"
     
-    def __init__(self, email, timeout=60):
-        self.timeout = timeout
+    def __init__(self, email):
         self.email = email
         self.username = email.split('@')[0]
+        self.json = self._wait_and_return_json_response(self.username)
 
-        response = requests.get(self.restmail_mail_server + self.username, verify=False)
-        self.json = json.loads(response.content)
+    def _wait_and_return_json_response(self, username, timeout=60):
+        timer = 0
+        response_json = []
+        
+        while timer < timeout:        
+            sleep(1)
+            timer += 1
+
+            response = requests.get(self.restmail_mail_server + self.username, verify=False)
+            response_json = json.loads(response.content)
+            if response_json != []:
+                return response_json
+
+        else:
+            raise Exception("Failed to find email before timeout")
 
     def delete_all_mail(self):
         requests.delete(self.restmail_mail_server + self.username)
