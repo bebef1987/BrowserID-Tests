@@ -16,6 +16,7 @@ class HomePage(Page):
 
     _sign_in_locator = (By.CSS_SELECTOR, '#loggedout > button')
     _logout_locator = (By.CSS_SELECTOR, '#loggedin > a')
+    _logged_in_user_email_locator = (By.CSS_SELECTOR, '#loggedin > span')
     _loading_spinner_locator = (By.CSS_SELECTOR, "li.loading img")
 
     def go_to_home_page(self):
@@ -31,10 +32,7 @@ class HomePage(Page):
         from browserid import BrowserID
         browserid = BrowserID(self.selenium, self.timeout)
         browserid.sign_in(credentials['email'], credentials['password'])
-        WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: self.is_element_visible(*self._logout_locator)
-            and not self.is_element_visible(*self._loading_spinner_locator),
-            "User could not login before the timeout")
+        self.wait_for_user_login()
 
     def logout(self):
         self.click_logout()
@@ -45,6 +43,8 @@ class HomePage(Page):
 
     def click_sign_in(self):
         self.selenium.find_element(*self._sign_in_locator).click()
+        from browserid import BrowserID
+        return BrowserID(self.selenium, self.timeout)
 
     def click_logout(self):
         self.selenium.find_element(*self._logout_locator).click()
@@ -52,3 +52,13 @@ class HomePage(Page):
     @property
     def is_logged_in(self):
         return self.is_element_visible(*self._logout_locator)
+
+    @property
+    def logged_in_user_email(self):
+        return self.selenium.find_element(*self._logged_in_user_email_locator).text
+
+    def wait_for_user_login(self):        
+        WebDriverWait(self.selenium, self.timeout).until(
+            lambda s: self.is_element_visible(*self._logout_locator)
+            and not self.is_element_visible(*self._loading_spinner_locator),
+            "User could not login before the timeout")
