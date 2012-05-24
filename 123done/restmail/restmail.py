@@ -34,7 +34,7 @@ class RestmailInbox(object):
             raise Exception("Failed to find email before timeout")
 
     def delete_all_mail(self):
-        requests.delete(self.restmail_mail_server + self.username)
+        requests.delete(self.restmail_mail_server + self.username, verify=False)
 
     def find_by_index(self, index):
         return EMail(self.json[index])
