@@ -15,7 +15,6 @@ import pytest
 
 class TestNewAccount:
 
-    @pytest.mark.nondestructive
     def test_can_create_new_user_account(self, mozwebqa):
         user = MockUser()
         home_pg = HomePage(mozwebqa)
