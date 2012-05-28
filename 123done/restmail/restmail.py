@@ -10,13 +10,13 @@ from time import sleep
 
 
 class RestmailInbox(object):
-
-    _restmail_mail_server = "https://restmail.net/mail/"
     '''
     This wrapper loads restmail for the given email address.
     It will loop and wait for an email to arrive if there is not one present.
     find_by_* methods can be used to find an email and return it as Email() class.
     '''
+
+    _restmail_mail_server = "https://restmail.net/mail/"
 
     def __init__(self, email):
         self.email = email
