@@ -29,7 +29,7 @@ class TestNewAccount:
         email = inbox.find_by_sender('BrowserID@browserid.org')
 
         # Load the BrowserID link from the email in the browser
-        mozwebqa.selenium.get(email.bid_link)
+        mozwebqa.selenium.get(email.verify_user_link)
 
         browserid.verify_email_address(user['password'])
 
