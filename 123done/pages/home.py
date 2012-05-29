@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 from page import Page
+from pages.bid import Bid
 
 
 class HomePage(Page):
@@ -28,23 +29,20 @@ class HomePage(Page):
 
     def sign_in(self, user='default'):
         credentials = self.testsetup.credentials[user]
-        self.click_sign_in()
-        from browserid import BrowserID
-        browserid = BrowserID(self.selenium, self.timeout)
-        browserid.sign_in(credentials['email'], credentials['password'])
+        bid = self.click_sign_in()
+        bid.sign_in(credentials['email'], credentials['password'])
         self.wait_for_user_login()
 
     def logout(self):
         self.click_logout()
-        WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: not self.is_element_visible(*self._logout_locator)
+        WebDriverWait(self.selenium, 10).until(
+            lambda s: self.is_element_visible(*self._sign_in_locator)
             and not self.is_element_visible(*self._loading_spinner_locator),
             "Logout button did not disappear before the timeout")
 
-    def click_sign_in(self):
+    def click_sign_in(self, action="new"):
         self.selenium.find_element(*self._sign_in_locator).click()
-        from browserid import BrowserID
-        return BrowserID(self.selenium, self.timeout)
+        return Bid.SignIn(self.selenium, self.timeout, action)
 
     def click_logout(self):
         self.selenium.find_element(*self._logout_locator).click()
@@ -57,8 +55,8 @@ class HomePage(Page):
     def logged_in_user_email(self):
         return self.selenium.find_element(*self._logged_in_user_email_locator).text
 
-    def wait_for_user_login(self):        
-        WebDriverWait(self.selenium, self.timeout).until(
+    def wait_for_user_login(self):
+        WebDriverWait(self.selenium, 10).until(
             lambda s: self.is_element_visible(*self._logout_locator)
             and not self.is_element_visible(*self._loading_spinner_locator),
             "User could not log in before the timeout")
