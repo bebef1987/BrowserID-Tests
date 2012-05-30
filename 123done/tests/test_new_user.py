@@ -5,7 +5,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from pages.home import HomePage
-from pages.bid import Bid
 from restmail.restmail import RestmailInbox
 from mocks.mock_user import MockUser
 from unittestzero import Assert
@@ -20,7 +19,7 @@ class TestNewAccount:
         home_pg = HomePage(mozwebqa)
 
         home_pg.go_to_home_page()
-        bid_login = home_pg.click_sign_in("new")
+        bid_login = home_pg.click_sign_in()
         bid_login.sign_in_new_user(user['email'])
 
         # Open restmail inbox, find the email
@@ -29,13 +28,15 @@ class TestNewAccount:
 
         # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.verify_user_link)
-        verify_email_address = Bid.VerifyEmailAddress(mozwebqa.selenium, mozwebqa.timeout)
+        from browserid.pages.webdriver.verify_email_address import VerifyEmailAddress
+        verify_email_address = VerifyEmailAddress(mozwebqa.selenium,
+                                                  mozwebqa.timeout)
 
         verify_email_address.verify_email_address(user['password'])
 
         home_pg.go_to_home_page()
-        bid_login = home_pg.click_sign_in("returning")
-        Assert.equal(user['email'], bid_login.email)
+        bid_login = home_pg.click_sign_in(expect='returning')
+        Assert.equal(user['email'], bid_login.signed_in_email)
 
         bid_login.sign_in_returning_user()
         home_pg.wait_for_user_login()
