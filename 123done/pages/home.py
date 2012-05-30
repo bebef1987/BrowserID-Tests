@@ -23,28 +23,34 @@ class HomePage(Page):
         self.selenium.get(self.base_url + '/')
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: self.is_element_visible(*self._sign_in_locator),
-            "Sign-in button did not appear before timeout")
+            'Timeout waiting for sign-in button to appear.')
         self.is_the_current_page
 
     def sign_in(self, user='default'):
         credentials = self.testsetup.credentials[user]
-        self.click_sign_in()
-        from browserid import BrowserID
-        browserid = BrowserID(self.selenium, self.timeout)
+        browserid = self.click_sign_in()
         browserid.sign_in(credentials['email'], credentials['password'])
         self.wait_for_user_login()
 
     def logout(self):
         self.click_logout()
         WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: not self.is_element_visible(*self._logout_locator)
-            and not self.is_element_visible(*self._loading_spinner_locator),
-            "Logout button did not disappear before the timeout")
+            lambda s: self.is_element_visible(*self._sign_in_locator) and not \
+                      self.is_element_visible(*self._loading_spinner_locator),
+            'Timeout waiting for user to log out.')
 
-    def click_sign_in(self):
+    def click_sign_in(self, expect='new'):
+        """Click the 'sign in' button.
+
+        Keyword arguments:
+        expect -- the expected resulting page
+                  'new' for user that is not currently signed in (default)
+                  'returning' for users already signed in or recently verified
+
+        """
         self.selenium.find_element(*self._sign_in_locator).click()
-        from browserid import BrowserID
-        return BrowserID(self.selenium, self.timeout)
+        from browserid.pages.webdriver.sign_in import SignIn
+        return SignIn(self.selenium, self.timeout, expect=expect)
 
     def click_logout(self):
         self.selenium.find_element(*self._logout_locator).click()
@@ -57,8 +63,8 @@ class HomePage(Page):
     def logged_in_user_email(self):
         return self.selenium.find_element(*self._logged_in_user_email_locator).text
 
-    def wait_for_user_login(self):        
+    def wait_for_user_login(self):
         WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: self.is_element_visible(*self._logout_locator)
-            and not self.is_element_visible(*self._loading_spinner_locator),
-            "User could not log in before the timeout")
+            lambda s: self.is_element_visible(*self._logout_locator) and not \
+                      self.is_element_visible(*self._loading_spinner_locator),
+            'Timeout waiting for user to login.')

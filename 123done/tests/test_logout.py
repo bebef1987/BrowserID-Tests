@@ -17,5 +17,6 @@ class TestLogout:
         home_pg = HomePage(mozwebqa)
         home_pg.go_to_home_page()
         home_pg.sign_in()
+
         home_pg.logout()
         Assert.false(home_pg.is_logged_in)
