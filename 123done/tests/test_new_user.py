@@ -20,7 +20,7 @@ class TestNewAccount:
 
         home_pg.go_to_home_page()
         bid_login = home_pg.click_sign_in()
-        bid_login.sign_in_new_user(user['email'])
+        bid_login.sign_in_new_user(user['email'], user['password'])
 
         # Open restmail inbox, find the email
         inbox = RestmailInbox(user['email'])
@@ -28,11 +28,8 @@ class TestNewAccount:
 
         # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.verify_user_link)
-        from browserid.pages.webdriver.verify_email_address import VerifyEmailAddress
-        verify_email_address = VerifyEmailAddress(mozwebqa.selenium,
-                                                  mozwebqa.timeout)
-
-        verify_email_address.verify_email_address(user['password'])
+        from browserid.pages.webdriver.complete_registration import CompleteRegistration
+        CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
         home_pg.go_to_home_page()
         bid_login = home_pg.click_sign_in(expect='returning')
