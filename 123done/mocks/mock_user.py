@@ -11,7 +11,7 @@ class MockUser(dict):
         # set your default values
         import time
 
-        self['email'] = '123donetest_%s@restmail.net' % str(time.time())
+        self['email'] = '123donetest_%s@restmail.net' % repr(time.time())
         self['password'] = 'Password12345'
 
         # update with any keyword arguments passed
