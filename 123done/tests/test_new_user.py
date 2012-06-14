@@ -24,7 +24,7 @@ class TestNewAccount:
 
         # Open restmail inbox, find the email
         inbox = RestmailInbox(user['email'])
-        email = inbox.find_by_sender('BrowserID@browserid.org')
+        email = inbox.find_by_sender('Persona@persona.org')
 
         # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.verify_user_link)
