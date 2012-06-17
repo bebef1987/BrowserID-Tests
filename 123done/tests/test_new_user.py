@@ -29,7 +29,10 @@ class TestNewAccount:
         # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.verify_user_link)
         from browserid.pages.webdriver.complete_registration import CompleteRegistration
-        CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
+        complete_registration = CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
+
+        # Check the message on the registration page reflects a successful registration!
+        Assert.contains("Thank you for signing up with Persona.", complete_registration.thank_you)
 
         home_pg.go_to_home_page()
         bid_login = home_pg.click_sign_in(expect='returning')
