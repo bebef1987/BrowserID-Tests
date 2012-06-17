@@ -32,10 +32,5 @@ class TestNewAccount:
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
         home_pg.go_to_home_page()
-        bid_login = home_pg.click_sign_in(expect='returning')
-        Assert.equal(user['email'], bid_login.signed_in_email)
-
-        bid_login.sign_in_returning_user()
-        home_pg.wait_for_user_login()
 
         Assert.equal(home_pg.logged_in_user_email, user['email'])
