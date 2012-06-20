@@ -31,7 +31,7 @@ class TestChangePassword:
         from browserid.pages.webdriver.complete_registration import CompleteRegistration
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
-        mozwebqa.selenium.get("https://login.dev.anosrep.org/")
+        mozwebqa.selenium.get(mozwebqa.server_base_url)
         from browserid.pages.webdriver.account_manager import AccountManager
         account_manager = AccountManager(mozwebqa.selenium, mozwebqa.timeout)
 
