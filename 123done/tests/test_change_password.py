@@ -35,7 +35,7 @@ class TestChangePassword:
         from browserid.pages.webdriver.account_manager import AccountManager
         account_manager = AccountManager(mozwebqa.selenium, mozwebqa.timeout)
 
-        Assert.contains(user['email'], account_manager.email)
+        Assert.contains(user['email'], account_manager.emails)
 
         account_manager.click_edit_password()
         account_manager.old_password = user['password']
