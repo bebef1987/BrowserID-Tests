@@ -24,7 +24,7 @@ class TestChangePassword:
 
         # Open restmail inbox, find the email
         inbox = RestmailInbox(user['email'])
-        email = inbox.find_by_sender('Persona@persona.org')
+        email = inbox.find_by_index(0)
 
         # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.verify_user_link)
