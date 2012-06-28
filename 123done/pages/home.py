@@ -22,7 +22,7 @@ class HomePage(Page):
     def go_to_home_page(self):
         self.selenium.get(self.base_url + '/')
         WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: self.is_element_visible(*self._sign_in_locator),
+            lambda s: not self.is_element_visible(*self._loading_spinner_locator),
             'Timeout waiting for sign-in button to appear.')
         self.is_the_current_page
 
