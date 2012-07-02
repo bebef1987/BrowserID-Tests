@@ -49,7 +49,7 @@ class TestAddAnotherEmail:
         email = inbox.find_by_index(0)
 
         # Load the BrowserID link from the email in the browser
-        mozwebqa.selenium.get(email.verify_user_link)
+        mozwebqa.selenium.get(email.add_email_address_link)
         from browserid.pages.webdriver.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
