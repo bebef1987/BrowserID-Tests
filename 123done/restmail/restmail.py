@@ -6,6 +6,7 @@
 
 import requests
 import json
+import re
 from time import sleep
 
 
@@ -74,8 +75,7 @@ class Email():
     @property
     def verify_user_link(self):
         # This returns the link for verifying the email address of a new account
+        regex = 'https:\/\/.*verify_email_address\?token=.{48}'
 
-        body = self.json['text']
-        start = body.find('https')
-        end = body.find('\n\nIf')
-        return body[start:end]
+        verify_link = re.search(regex, self.body).group(0)
+        return verify_link
