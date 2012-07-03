@@ -3,4 +3,4 @@
         url = git://github.com/davehunt/bidpom.git
 [submodule "123done/browserid"]
         path = 123done/browserid
-        url = git://github.com/davehunt/bidpom.git
+        url = git://github.com/zacc/bidpom.git
