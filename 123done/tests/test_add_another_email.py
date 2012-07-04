@@ -34,7 +34,6 @@ class TestAddAnotherEmail:
         # Check the message on the registration page reflects a successful registration!
         Assert.contains("Thank you for signing up with Persona.", complete_registration.thank_you)
 
-        home_pg.go_to_home_page()
         home_pg.wait_for_user_login()
         Assert.equal(home_pg.logged_in_user_email, user['email'])
 
@@ -53,7 +52,6 @@ class TestAddAnotherEmail:
         from browserid.pages.webdriver.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
-        home_pg.go_to_home_page()
         home_pg.wait_for_user_login()
         Assert.equal(home_pg.logged_in_user_email, second_user['email'])
         home_pg.click_logout()
