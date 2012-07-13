@@ -83,7 +83,7 @@ class Email():
     @property
     def add_email_address_link(self):
         # This returns the link for adding the email address of a new account
-        regex = 'https:\/\/.*add_email_address\?token=.{48}'
+        regex = 'https:\/\/.*confirm\?token=.{48}'
 
         add_email_link = re.search(regex, self.body).group(0)
         return add_email_link
