@@ -12,9 +12,9 @@ from unittestzero import Assert
 import pytest
 
 
-class TestNewAccount:
+class TestChangePassword:
 
-    def test_can_create_new_user_account(self, mozwebqa):
+    def test_can_change_user_password(self, mozwebqa):
         user = MockUser()
         home_pg = HomePage(mozwebqa)
 
@@ -29,11 +29,26 @@ class TestNewAccount:
         # Load the BrowserID link from the email in the browser
         mozwebqa.selenium.get(email.verify_user_link)
         from browserid.pages.webdriver.complete_registration import CompleteRegistration
-        complete_registration = CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
+        CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
-        # Check the message on the registration page reflects a successful registration!
-        Assert.contains("Thank you for signing up with Persona.", complete_registration.thank_you)
+        mozwebqa.selenium.get(mozwebqa.server_base_url)
+        from browserid.pages.webdriver.account_manager import AccountManager
+        account_manager = AccountManager(mozwebqa.selenium, mozwebqa.timeout)
+
+        Assert.contains(user['email'], account_manager.emails)
+
+        account_manager.click_edit_password()
+        account_manager.old_password = user['password']
+        new_password = "newpass12345"
+        account_manager.new_password = new_password
+        account_manager.click_password_done()
+
+        account_manager.click_sign_out()
 
         home_pg.go_to_home_page()
 
-        Assert.equal(home_pg.logged_in_user_email, user['email'])
+        bid_login = home_pg.click_sign_in()
+        bid_login.sign_in(user['email'], new_password)
+
+        home_pg.wait_for_user_login()
+        Assert.true(home_pg.is_logged_in)
