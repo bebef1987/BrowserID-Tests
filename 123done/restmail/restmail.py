@@ -25,7 +25,7 @@ class RestmailInbox(object):
         self.json = self._wait_and_return_json_response(self.username)
 
     def _wait_and_return_json_response(self, username, timeout=180):
-        # Loop for 60 attempts until the restmail json returned is not empty
+        # Loop for 180 attempts until the restmail json returned is not empty
 
         timer = 0
         response_json = []
