@@ -8,6 +8,7 @@ from pages.home import HomePage
 from restmail.restmail import RestmailInbox
 from mocks.mock_user import MockUser
 from unittestzero import Assert
+from page import Page
 
 import pytest
 
@@ -31,7 +32,7 @@ class TestChangePassword:
         from browserid.pages.webdriver.complete_registration import CompleteRegistration
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout)
 
-        mozwebqa.selenium.get(mozwebqa.server_base_url)
+        mozwebqa.selenium.get(Page(mozwebqa).server_base_url)
         from browserid.pages.webdriver.account_manager import AccountManager
         account_manager = AccountManager(mozwebqa.selenium, mozwebqa.timeout)
 

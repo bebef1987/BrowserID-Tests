@@ -19,6 +19,13 @@ class Page(object):
         self.timeout = testsetup.timeout
 
     @property
+    def server_base_url(self):
+        if "beta" in self.base_url:
+            return "https://login.anosrep.org"
+        else:
+            return "https://login.dev.anosrep.org"
+
+    @property
     def is_the_current_page(self):
         if self._page_title:
             WebDriverWait(self.selenium, self.timeout).until(lambda s: s.title)
